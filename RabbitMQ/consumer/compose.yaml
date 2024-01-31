@@ -1,0 +1,22 @@
+services:
+  consumer1:
+    image: oldgithubber/consumer1
+    build:
+      context: ./c1
+    container_name: consumer1
+    restart: unless-stopped
+    environment:
+    - QUEUE_NAME=tv
+    ports:
+    - 4001:3001
+
+  consumer2:
+    image: oldgithubber/consumer2
+    build:
+      context: ./c2
+    container_name: consumer2
+    restart: unless-stopped
+    environment:
+    - QUEUE_NAME=computer
+    ports:
+    - 4002:3002

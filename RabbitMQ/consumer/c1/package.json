@@ -1,0 +1,15 @@
+{
+  "name": "consumer1",
+  "version": "1.0.0",
+  "description": "Consume messages from queue",
+  "main": "consumer1.js",
+  "scripts": {
+    "start": "node consumer1.js"
+  },
+  "author": "Tony Nicol",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,43 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    restart: unless-stopped
+    
+    environment:
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=admin
+     - RABBITMQ_USER=root
+     - RABBITMQ_PASS=root
+
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"] # Tried many of these checks and none work so rely on app restarts
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+    ports:
+      - 5672:5672   # Message broker. Make ports same as we won't be accessing from internet
+      - 15672:15672 # Management interface. Make ports same as it's meant to be accessed via the internet
+
+    volumes:
+      - rabbit-vol:/var/lib/rabbitmq  # Where to store the queued data
+
+  producer:
+    image: oldgithubber/producer
+    pull_policy: always # Attempt to always pull latest image. Lazy if not using versioning. And slow as up will always pull
+    build:
+      context: .   # compose.yaml in current dir
+    container_name: producer
+   # restart: unless-stopped  # If it stops and I didnt' stop it then have another go
+    depends_on: 
+    - rabbitmq
+    
+    ports:
+    - "4000:3000"
+
+volumes:
+  rabbit-vol:
+    driver: local
+
